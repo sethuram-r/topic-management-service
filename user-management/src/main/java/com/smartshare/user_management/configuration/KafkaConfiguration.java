@@ -12,21 +12,15 @@ import java.util.HashMap;
 @Configuration
 public class KafkaConfiguration {
 
-    @Bean
-    public KafkaAdmin admin() {
-        var configs = new HashMap<String, Object>();
-        configs.put( AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "broker:9092" );
-        return new KafkaAdmin( configs );
-    }
+  @Bean
+  public KafkaAdmin admin() {
+    var configs = new HashMap<String, Object>();
+    configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "broker:9092");
+    return new KafkaAdmin(configs);
+  }
 
-    @Bean
-    public NewTopic userTopic() {
-        return TopicBuilder.name( "user" )
-                .partitions( 4 )
-                .replicas( 1 )
-                .compact()
-                .build();
-    }
-
-
+  @Bean
+  public NewTopic userTopic() {
+    return TopicBuilder.name("all-types").partitions(4).replicas(1).compact().build();
+  }
 }

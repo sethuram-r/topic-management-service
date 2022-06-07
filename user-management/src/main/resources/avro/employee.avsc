@@ -1,0 +1,16 @@
+{
+  "namespace": "com.smartshare.user_management.model",
+  "type": "record",
+  "name": "Employee",
+  "fields": [
+    {
+      "name": "employeeName",
+      "type": "string",
+      "avro.java.string": "String"
+    },
+    {
+      "name": "employeeAge",
+      "type": "int"
+    }
+  ]
+}
