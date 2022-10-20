@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "namespace": "com.smartshare.user_management.model",
+  "name": "AllTypes",
+  "fields": [
+    {
+      "name": "oneOfType",
+      "type": [
+        "com.smartshare.user_management.model.User",
+        "com.smartshare.user_management.model.Employee"
+      ]
+    }
+  ]
+}

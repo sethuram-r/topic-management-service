@@ -12,9 +12,103 @@
     <artifactId>user-management</artifactId>
     <name>SMART-SHARE :: User Management</name>
 
-    <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- other dependencies -->
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-streams-avro-serde</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
+                            <imports>
+                                <import>${project.basedir}/src/main/resources/avro/user.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro/employee.avsc</import>
+                            </imports>
+                            <includes>
+                                <include>*.avsc</include>
+                            </includes>
+                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+                            <stringType>String</stringType>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <configuration>
+                    <schemaRegistryUrls>
+                        <param>http://127.0.0.1:8081</param>
+                    </schemaRegistryUrls>
+                    <subjects>
+                        <all-types-value>src/main/resources/avro/all_types.avsc</all-types-value>
+                        <user>src/main/resources/avro/user.avsc</user>
+                        <employee>src/main/resources/avro/employee.avsc</employee>
+                    </subjects>
+                    <schemaTypes>
+                        <all-types-value>AVRO</all-types-value>
+                        <user>AVRO</user>
+                        <employee>AVRO</employee>
+                    </schemaTypes>
+                    <references>
+                        <all-types-value>
+                            <reference>
+                                <name>com.smartshare.user_management.model.User</name>
+                                <subject>user</subject>
+                            </reference>
+                            <reference>
+                                <name>com.smartshare.user_management.model.Employee</name>
+                                <subject>employee</subject>
+                            </reference>
+                        </all-types-value>
+                    </references>
+                    <outputDirectory/>
+                </configuration>
+                <goals>
+                    <goal>register</goal>
+                </goals>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
